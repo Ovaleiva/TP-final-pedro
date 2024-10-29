@@ -1,28 +1,48 @@
-class CorporateData:
-    _instance = None
-    sequence_id = 0
+from singleton_meta import SingletonMeta
 
-    def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super(CorporateData, cls).__new__(cls)
-            cls._init_data()
-        return cls._instance
+class CorporateData(metaclass=SingletonMeta):
+    """Clase que maneja los datos corporativos con implementación Singleton."""
+    
+    def __init__(self):
+        self.data = {
+            'Domicilio': "Urquiza 1115",
+            'Localidad': "Concepcion del Uruguay",
+            'CodigoPostal': "3260",
+            'Provincia': "Entre Ríos",
+            'CUIT': "20-12345678-9",
+            'idSeq': 1001 
+        }
 
-    @classmethod
-    def _init_data(cls):
-        cls.address = "Urquiza 1115"
-        cls.cuit = "20-43482331-7"
-        cls.phone_number = "+54 3442 304271"
+    def getData(self, uuid, id_sede):
+        """Retorna los datos de una sede específica en formato diccionario."""
+        if not uuid or not isinstance(uuid, str):
+            raise ValueError("UUID no es válido o está ausente.")
+        if not isinstance(id_sede, int) or id_sede <= 0:
+            raise ValueError("El ID de la sede debe ser un número entero positivo.")
+        
+        return {
+            'ID': id_sede,
+            'Domicilio': self.data['Domicilio'],
+            'Localidad': self.data['Localidad'],
+            'CodigoPostal': self.data['CodigoPostal'],
+            'Provincia': self.data['Provincia']
+        }
 
-    def getData(self, uuid, sede):
-        # Simulamos obtener datos de la sede
-        return {"sede": sede, "Domicilio": self.address, "Localidad": "Concepcion del Uruguay", "Cp": "3260", "provincia": "Entre Ríos"}
+    def getCUIT(self, uuid, id_sede):
+        """Retorna el CUIT de una sede específica."""
+        if not uuid or not isinstance(uuid, str):
+            raise ValueError("UUID no es válido o está ausente.")
+        if not isinstance(id_sede, int) or id_sede <= 0:
+            raise ValueError("El ID de la sede debe ser un número entero positivo.")
+        
+        return {'idSede': id_sede, 'CUIT': self.data['CUIT']}
 
-    def getCUIT(self, uuid, sede):
-        # Retornamos el CUIT
-        return {"sede": sede, "CUIT": self.cuit}
-
-    def getSeqID(self, uuid, sede):
-        # Incrementamos y devolvemos el identificador de secuencia
-        self.sequence_id += 1
-        return {"sede": sede, "seqID": self.sequence_id}
+    def getSeqID(self, uuid, id_sede):
+        """Incrementa y retorna el ID de secuencia para una sede específica."""
+        if not uuid or not isinstance(uuid, str):
+            raise ValueError("UUID no es válido o está ausente.")
+        if not isinstance(id_sede, int) or id_sede <= 0:
+            raise ValueError("El ID de la sede debe ser un número entero positivo.")
+        
+        self.data['idSeq'] += 1
+        return {'idSede': id_sede, 'seqID': self.data['idSeq']}
