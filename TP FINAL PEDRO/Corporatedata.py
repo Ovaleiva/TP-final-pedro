@@ -1,16 +1,22 @@
 from singleton_meta import SingletonMeta
+from decimal import Decimal
 
 class CorporateData(metaclass=SingletonMeta):
     """Clase que maneja los datos corporativos con implementación Singleton."""
     
     def __init__(self):
         self.data = {
-            'Domicilio': "Urquiza 1115",
-            'Localidad': "Concepcion del Uruguay",
+            'Sede': "FCyT",
+            'Domicilio': "25 de Mayo 385",
+            'Localidad': "Concepción del Uruguay",
             'CodigoPostal': "3260",
-            'Provincia': "Entre Ríos",
-            'CUIT': "20-12345678-9",
-            'idSeq': 1001 
+            'Provincia': "Entre Rios",
+            'CUIT': "30-70925411-8",
+            'idSeq': Decimal('123'),
+            'idReq': Decimal('83'),
+            'Telefono': "03442 43-1442",
+            'ID': "UADER-FCyT-IS2",
+            'Web': "http://www.uader.edu.ar"
         }
 
     def getData(self, uuid, id_sede):
@@ -21,11 +27,13 @@ class CorporateData(metaclass=SingletonMeta):
             raise ValueError("El ID de la sede debe ser un número entero positivo.")
         
         return {
-            'ID': id_sede,
+            'ID': self.data['ID'],
             'Domicilio': self.data['Domicilio'],
             'Localidad': self.data['Localidad'],
             'CodigoPostal': self.data['CodigoPostal'],
-            'Provincia': self.data['Provincia']
+            'Provincia': self.data['Provincia'],
+            'Telefono': self.data['Telefono'],
+            'Web': self.data['Web']
         }
 
     def getCUIT(self, uuid, id_sede):
