@@ -1,41 +1,41 @@
-import uuid
-from datetime import datetime
-from singleton_meta import SingletonMeta
+import uuid 
+from Corporatedata import CorporateData
+from Corporatelog import CorporateLog
+import pprint
 
-class CorporateLog(metaclass=SingletonMeta):
-    """Clase que maneja los registros (logs) de acciones con implementación Singleton."""
+pp = pprint.PrettyPrinter(indent=4)
+
+if __name__ == "__main__":
+    corporate_data = CorporateData()
+    corporate_log = CorporateLog()
+
+    uuid_session = str(uuid.uuid4())
+    id_sede = 1
+
+    # Obtener datos de la sede
+    data = corporate_data.getData(uuid_session, id_sede)
+    print("Datos de la sede:")
+    pp.pprint(data)
+
+    # Obtener CUIT de la sede
+    cuit = corporate_data.getCUIT(uuid_session, id_sede)
+    print("CUIT de la sede:")
+    pp.pprint(cuit)
+
+    # Obtener y actualizar ID de secuencia de la sede
+    seq_id = corporate_data.getSeqID(uuid_session, id_sede)
+    print("ID de secuencia de la sede:")
+    pp.pprint(seq_id)
+
+    # Registrar logs de las acciones
+    corporate_log.post(uuid_session, "getData")
+
+    corporate_log.post(uuid_session, "getCUIT")
+
+    corporate_log.post(uuid_session, "getSeqID")
+
+    # Listar logs
+    log_list = corporate_log.list(corporate_log.uuidCPU)
+    print("Lista de logs:")
     
-    def __init__(self):
-        self.logs = []
-        self.uuidCPU = uuid.getnode()
-
-    def post(self, uuid, action):
-        """Registra un log de la acción con un timestamp."""
-        if not uuid or not isinstance(uuid, str):
-            raise ValueError("UUID no es válido o está ausente.")
-        if not action or not isinstance(action, str):
-            raise ValueError("La acción debe ser una cadena no vacía.")
-        
-        timestamp = datetime.now()
-        log_entry = {
-            'uuid': uuid,
-            'uuidCPU': self.uuidCPU,
-            'action': action,
-            'timestamp': timestamp,
-            'status': 'OK'
-        }
-        self.logs.append(log_entry)
-        print(f"Log registrado: {log_entry}")
-        return log_entry
-
-    def list(self, uuidCPU, uuid=None):
-        """Lista los logs asociados a un uuidCPU, opcionalmente filtrados por uuid de sesión."""
-        if not isinstance(uuidCPU, int) or uuidCPU <= 0:
-            raise ValueError("El UUID de la CPU debe ser un número entero positivo.")
-        
-        filtered_logs = [log for log in self.logs if log['uuidCPU'] == uuidCPU]
-        if uuid:
-            filtered_logs = [log for log in filtered_logs if log['uuid'] == uuid]
-
-        print(f"Logs encontrados: {filtered_logs}")
-        return filtered_logs
+    pp.pprint(log_list)
