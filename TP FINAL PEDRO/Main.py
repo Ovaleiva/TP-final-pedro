@@ -1,26 +1,41 @@
+import uuid 
 from Corporatedata import CorporateData
 from Corporatelog import CorporateLog
+import pprint
+
+pp = pprint.PrettyPrinter(indent=4)
 
 if __name__ == "__main__":
-    # Inicializamos las clases
     corporate_data = CorporateData()
     corporate_log = CorporateLog()
 
-    # Aplicación hace la petición de datos
-    uuid = "12345"
-    sede = "Sede Central"
+    uuid_session = str(uuid.uuid4())
+    id_sede = 1
 
-    # Obtener datos
-    data = corporate_data.getData(uuid, sede)
-    corporate_log.post(uuid, "getData")
-    print(data)
+    # Obtener datos de la sede
+    data = corporate_data.getData(uuid_session, id_sede)
+    print("Datos de la sede:")
+    pp.pprint(data)
 
-    # Obtener CUIT
-    cuit = corporate_data.getCUIT(uuid, sede)
-    corporate_log.post(uuid, "getCUIT")
-    print(cuit)
+    # Obtener CUIT de la sede
+    cuit = corporate_data.getCUIT(uuid_session, id_sede)
+    print("CUIT de la sede:")
+    pp.pprint(cuit)
 
-    # Obtener sequence ID
-    seq_id = corporate_data.getSeqID(uuid, sede)
-    corporate_log.post(uuid, "getSeqID")
-    print(seq_id)
+    # Obtener y actualizar ID de secuencia de la sede
+    seq_id = corporate_data.getSeqID(uuid_session, id_sede)
+    print("ID de secuencia de la sede:")
+    pp.pprint(seq_id)
+
+    # Registrar logs de las acciones
+    corporate_log.post(uuid_session, "getData")
+
+    corporate_log.post(uuid_session, "getCUIT")
+
+    corporate_log.post(uuid_session, "getSeqID")
+
+    # Listar logs
+    log_list = corporate_log.list(corporate_log.uuidCPU)
+    print("Lista de logs:")
+    
+    pp.pprint(log_list)
